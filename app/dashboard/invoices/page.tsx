@@ -5,6 +5,8 @@ import { CreateInvoice } from '@/app/ui/invoices/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { fetchInvoicesPages } from '@/app/lib/data';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
@@ -32,3 +34,4 @@ export default async function Page(props: {
     </div>
   );
 }
+

@@ -2,6 +2,8 @@ import { fetchFilteredCustomers } from '@/app/lib/data';
 import CustomersTable from '@/app/ui/customers/table';
 import { lusitana } from '@/app/ui/fonts';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
@@ -21,3 +23,4 @@ export default async function Page(props: {
     </div>
   );
 }
+

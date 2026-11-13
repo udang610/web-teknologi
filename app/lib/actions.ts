@@ -53,3 +53,4 @@ export async function logOut() {
   cookieStore.delete('session_user');
   redirect('/');
 }
+
