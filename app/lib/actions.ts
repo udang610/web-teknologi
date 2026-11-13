@@ -5,7 +5,16 @@ import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+function getSql() {
+  const url = process.env.POSTGRES_URL;
+  if (!url) {
+    throw new Error('Variabel POSTGRES_URL tidak ditemukan di Environment Variables Vercel.');
+  }
+  return postgres(url, {
+    ssl: 'require',
+    connect_timeout: 10,
+  });
+}
 
 export async function authenticate(
   prevState: string | undefined,
@@ -19,6 +28,7 @@ export async function authenticate(
   }
 
   try {
+    const sql = getSql();
     const users = await sql`SELECT * FROM users WHERE email = ${email}`;
     const user = users[0];
 
@@ -40,9 +50,9 @@ export async function authenticate(
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Auth error:', error);
-    return 'Gagal terhubung ke database. Pastikan POSTGRES_URL di Vercel sudah benar.';
+    return `Gagal terhubung ke database: ${error?.message || error}`;
   }
 
   redirect('/dashboard');
@@ -53,4 +63,3 @@ export async function logOut() {
   cookieStore.delete('session_user');
   redirect('/');
 }
-
